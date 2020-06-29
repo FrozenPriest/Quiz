@@ -52,7 +52,7 @@
                 android:textColor="@color/colorSecondary" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputName"
+
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,6 +60,7 @@
                 android:layout_marginRight="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/name" />
@@ -75,6 +76,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@color/colorButtonBackground"
                 android:text="@string/start"
+                android:onClick="startQuiz"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </LinearLayout>
