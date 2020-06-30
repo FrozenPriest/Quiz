@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        seekBar.max = Questions.getAmountOfQuestions() - 1
+
     }
 
     fun startQuiz(view: View) {
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             val intent = Intent(this@MainActivity, QuestionActivity::class.java)
 
-            val arrayList = ArrayList(Questions.getQuestions(4))
+            val arrayList = ArrayList(Questions.getQuestions(seekBar.progress+1))
 
             intent.putParcelableArrayListExtra("questions", arrayList)
             intent.putExtra("questionIndex", 0)
@@ -33,4 +35,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 }

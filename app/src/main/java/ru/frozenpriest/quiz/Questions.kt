@@ -1,5 +1,7 @@
 package ru.frozenpriest.quiz
 
+import kotlin.math.min
+
 object Questions {
 
     private val questions = listOf(
@@ -11,5 +13,9 @@ object Questions {
 
     fun getQuestions(amount : Int) : List<Question> {
         return ShuffleUtils.pickNRandomElements(questions, amount)
+    }
+
+    fun getAmountOfQuestions(): Int {
+        return min(questions.size, 10)
     }
 }

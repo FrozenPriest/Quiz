@@ -1,11 +1,11 @@
 package ru.frozenpriest.quiz.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_question.*
@@ -22,6 +22,7 @@ class QuestionActivity : AppCompatActivity() {
     private var questionNumber: Int = -1
     private lateinit var timer : CountDownTimer
     private var timerLength : Int = 0
+    private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +82,8 @@ class QuestionActivity : AppCompatActivity() {
     private fun submitAnswer(i: Int) {
         if(i != -1 && i != question.rightAnswerIndex) {
             getButton(i).setBackgroundColor(ContextCompat.getColor(this, R.color.colorWrongAnswer))
+        } else {
+            score++
         }
         getButton(question.rightAnswerIndex).setBackgroundColor(ContextCompat.getColor(this, R.color.colorRightAnswer))
 
@@ -92,8 +95,12 @@ class QuestionActivity : AppCompatActivity() {
 
     private fun openNextQuestion() {
         if(questionNumber+1 >= questions.size) {
-            //todo open final score
-            Toast.makeText(this, "Finished", Toast.LENGTH_LONG).show()
+            val intent = Intent(this@QuestionActivity, ResultActivity::class.java)
+            intent.putExtra("score", score)
+            intent.putExtra("maxScore", questions.size)
+
+            startActivity(intent)
+            finish()
         } else {
             //open next question
 
