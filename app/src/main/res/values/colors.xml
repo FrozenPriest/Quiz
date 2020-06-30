@@ -7,5 +7,6 @@
     <color name="colorButtonBackground">#C87027</color>
     <color name="colorWrongAnswer">#FF0000</color>
     <color name="colorRightAnswer">#00FF0B</color>
+    <color name="colorButtonText">#FFFFFF</color>
 
 </resources>
