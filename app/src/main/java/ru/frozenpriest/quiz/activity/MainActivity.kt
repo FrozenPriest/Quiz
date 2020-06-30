@@ -25,10 +25,8 @@ class MainActivity : AppCompatActivity() {
 
             val arrayList = ArrayList(Questions.getQuestions(4))
 
-
             intent.putParcelableArrayListExtra("questions", arrayList)
             intent.putExtra("questionIndex", 0)
-
 
             startActivity(intent)
             finish()

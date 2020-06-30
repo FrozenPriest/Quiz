@@ -18,35 +18,38 @@ class QuestionActivity : AppCompatActivity() {
 
     private var factor : Double = 0.0
 
-    private var rightAnswerIndex = -1
+    private lateinit var question:Question
     private var questionNumber: Int = 0
     private lateinit var timer : CountDownTimer
     private var timerLength : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_question)
 
         val extras = intent.extras
         if(extras != null) {
             questionNumber = extras.getInt("questionIndex")
-            val question = extras.getParcelableArrayList<Question>("questions")?.get(questionNumber) ?: throw NullPointerException("Question should not be null")
+            question = extras.getParcelableArrayList<Question>("questions")?.get(questionNumber) ?: throw NullPointerException("Question should not be null")
 
             //todo shuffle answers
 
-            textViewQuestion.text = question.question
-            buttonAnswer1.text = question.answers[0]
-            buttonAnswer2.text = question.answers[1]
-            buttonAnswer3.text = question.answers[2]
-            buttonAnswer4.text = question.answers[3]
-
-            rightAnswerIndex = question.rightAnswerIndex
+            setupQuestionText()
         }
 
         timerLength = resources.getInteger(R.integer.countdownTime)
         factor = 100.0 / timerLength
 
         startTimer()
+    }
+
+    private fun setupQuestionText() {
+        textViewQuestion.text = question.question
+        buttonAnswer1.text = question.answers[0]
+        buttonAnswer2.text = question.answers[1]
+        buttonAnswer3.text = question.answers[2]
+        buttonAnswer4.text = question.answers[3]
     }
 
     fun answerQuestion(view: View) {
@@ -62,10 +65,10 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun submitAnswer(i: Int) {
-        if(i != -1 && i != rightAnswerIndex) {
+        if(i != -1 && i != question.rightAnswerIndex) {
             getButton(i).setBackgroundColor(ContextCompat.getColor(this, R.color.colorWrongAnswer))
         }
-        getButton(rightAnswerIndex).setBackgroundColor(ContextCompat.getColor(this, R.color.colorRightAnswer))
+        getButton(question.rightAnswerIndex).setBackgroundColor(ContextCompat.getColor(this, R.color.colorRightAnswer))
 
         disableButtonClickListeners()
         stopTimer()
@@ -86,6 +89,7 @@ class QuestionActivity : AppCompatActivity() {
             newIntent.putParcelableArrayListExtra("questions", arrayList)
             newIntent.putExtra("questionIndex", questionNumber+1)
 
+
             startActivity(newIntent)
             finish()
         }
@@ -101,11 +105,6 @@ class QuestionActivity : AppCompatActivity() {
         buttonAnswer2.isEnabled = false
         buttonAnswer3.isEnabled = false
         buttonAnswer4.isEnabled = false
-/*
-        buttonAnswer1.setOnClickListener{openNextQuestion(it)}
-        buttonAnswer2.setOnClickListener{openNextQuestion(it)}
-        buttonAnswer3.setOnClickListener{openNextQuestion(it)}
-        buttonAnswer4.setOnClickListener{openNextQuestion(it)}*/
     }
 
     private fun getButton(index: Int) : TextView {
