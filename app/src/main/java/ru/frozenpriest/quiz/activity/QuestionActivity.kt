@@ -35,13 +35,11 @@ class QuestionActivity : AppCompatActivity() {
 
             //todo shuffle answers
 
-            setupQuestionText()
+
         }
 
         timerLength = resources.getInteger(R.integer.countdownTime)
         factor = 100.0 / timerLength
-
-        startTimer()
     }
 
     private fun setupQuestionText() {
@@ -52,7 +50,21 @@ class QuestionActivity : AppCompatActivity() {
         buttonAnswer4.text = question.answers[3]
     }
 
-    fun answerQuestion(view: View) {
+    fun beginQuestion(view: View) {
+        setupQuestionText()
+        setupButtonListeners()
+        textViewQuestion.setOnClickListener(null)
+        startTimer()
+    }
+
+    private fun setupButtonListeners() {
+        buttonAnswer1.setOnClickListener {answerQuestion(it)}
+        buttonAnswer2.setOnClickListener {answerQuestion(it)}
+        buttonAnswer3.setOnClickListener {answerQuestion(it)}
+        buttonAnswer4.setOnClickListener {answerQuestion(it)}
+    }
+
+    private fun answerQuestion(view: View) {
         val index : Int = when(view) {
             buttonAnswer1 -> 0
             buttonAnswer2 -> 1
@@ -70,7 +82,7 @@ class QuestionActivity : AppCompatActivity() {
         }
         getButton(question.rightAnswerIndex).setBackgroundColor(ContextCompat.getColor(this, R.color.colorRightAnswer))
 
-        disableButtonClickListeners()
+        disableClickListeners()
         stopTimer()
 
         constraintLayout.setOnClickListener{view -> openNextQuestion(view)}
@@ -95,7 +107,9 @@ class QuestionActivity : AppCompatActivity() {
         }
     }
 
-    private fun disableButtonClickListeners() {
+    private fun disableClickListeners() {
+        textViewQuestion.isClickable = false
+
         buttonAnswer1.isClickable = false
         buttonAnswer2.isClickable = false
         buttonAnswer3.isClickable = false
@@ -138,5 +152,7 @@ class QuestionActivity : AppCompatActivity() {
     private fun stopTimer() {
         timer.cancel()
     }
+
+
 
 }

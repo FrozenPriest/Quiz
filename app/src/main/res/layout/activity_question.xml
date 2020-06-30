@@ -15,7 +15,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="answerQuestion"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -30,7 +29,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="answerQuestion"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonAnswer4"
@@ -59,6 +57,8 @@
             android:gravity="center"
             android:textAlignment="center"
             android:textSize="40sp"
+            android:onClick="beginQuestion"
+            android:text="@string/tap_to_begin"
             android:textStyle="bold|italic" />
     </androidx.cardview.widget.CardView>
 
@@ -69,7 +69,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="answerQuestion"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonAnswer3"
         app:layout_constraintEnd_toStartOf="@+id/buttonAnswer2"
@@ -84,7 +83,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="answerQuestion"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonAnswer4"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
