@@ -1,6 +1,5 @@
 package ru.frozenpriest.quiz.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -19,7 +18,8 @@ class QuestionActivity : AppCompatActivity() {
     private var factor : Double = 0.0
 
     private lateinit var question:Question
-    private var questionNumber: Int = 0
+    private lateinit var questions:ArrayList<Question>
+    private var questionNumber: Int = -1
     private lateinit var timer : CountDownTimer
     private var timerLength : Int = 0
 
@@ -30,8 +30,7 @@ class QuestionActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if(extras != null) {
-            questionNumber = extras.getInt("questionIndex")
-            question = extras.getParcelableArrayList<Question>("questions")?.get(questionNumber) ?: throw NullPointerException("Question should not be null")
+            questions = extras.getParcelableArrayList<Question>("questions")?:throw NullPointerException("Question should not be null")
 
             //todo shuffle answers
 
@@ -40,6 +39,8 @@ class QuestionActivity : AppCompatActivity() {
 
         timerLength = resources.getInteger(R.integer.countdownTime)
         factor = 100.0 / timerLength
+
+        openNextQuestion()
     }
 
     private fun setupQuestionText() {
@@ -52,12 +53,13 @@ class QuestionActivity : AppCompatActivity() {
 
     fun beginQuestion(view: View) {
         setupQuestionText()
-        setupButtonListeners()
+        setClickListeners(true)
+        setupButtonListenersForAnswer()
         textViewQuestion.setOnClickListener(null)
         startTimer()
     }
 
-    private fun setupButtonListeners() {
+    private fun setupButtonListenersForAnswer() {
         buttonAnswer1.setOnClickListener {answerQuestion(it)}
         buttonAnswer2.setOnClickListener {answerQuestion(it)}
         buttonAnswer3.setOnClickListener {answerQuestion(it)}
@@ -82,43 +84,67 @@ class QuestionActivity : AppCompatActivity() {
         }
         getButton(question.rightAnswerIndex).setBackgroundColor(ContextCompat.getColor(this, R.color.colorRightAnswer))
 
-        disableClickListeners()
+        setClickListeners(false)
         stopTimer()
 
-        constraintLayout.setOnClickListener{view -> openNextQuestion(view)}
+        constraintLayout.setOnClickListener{openNextQuestion()}
     }
 
-    private fun openNextQuestion(view: View) {
-        val arrayList = intent.extras?.getParcelableArrayList<Question>("questions")!!
-        if(questionNumber+1 >= arrayList.size) {
+    private fun openNextQuestion() {
+        if(questionNumber+1 >= questions.size) {
             //todo open final score
             Toast.makeText(this, "Finished", Toast.LENGTH_LONG).show()
         } else {
             //open next question
 
-            val newIntent = Intent(this@QuestionActivity, QuestionActivity::class.java)
+            clearText()
+            remakeOriginalListeners()
 
-            newIntent.putParcelableArrayListExtra("questions", arrayList)
-            newIntent.putExtra("questionIndex", questionNumber+1)
+            question = questions[++questionNumber]
 
 
-            startActivity(newIntent)
-            finish()
         }
     }
 
-    private fun disableClickListeners() {
-        textViewQuestion.isClickable = false
+    private fun remakeOriginalListeners() {
+        textViewQuestion.setOnClickListener {beginQuestion(it)}
 
-        buttonAnswer1.isClickable = false
-        buttonAnswer2.isClickable = false
-        buttonAnswer3.isClickable = false
-        buttonAnswer4.isClickable = false
+        clearButtonColors()
 
-        buttonAnswer1.isEnabled = false
-        buttonAnswer2.isEnabled = false
-        buttonAnswer3.isEnabled = false
-        buttonAnswer4.isEnabled = false
+        buttonAnswer1.setOnClickListener{}
+        buttonAnswer2.setOnClickListener{}
+        buttonAnswer3.setOnClickListener{}
+        buttonAnswer4.setOnClickListener{}
+
+    }
+
+    private fun clearButtonColors() {
+        buttonAnswer1.setBackgroundColor(ContextCompat.getColor(this, R.color.colorButtonBackground))
+        buttonAnswer2.setBackgroundColor(ContextCompat.getColor(this, R.color.colorButtonBackground))
+        buttonAnswer3.setBackgroundColor(ContextCompat.getColor(this, R.color.colorButtonBackground))
+        buttonAnswer4.setBackgroundColor(ContextCompat.getColor(this, R.color.colorButtonBackground))
+    }
+
+    private fun clearText() {
+        textViewQuestion.text = resources.getText(R.string.tap_to_begin)
+        buttonAnswer1.text = ""
+        buttonAnswer2.text = ""
+        buttonAnswer3.text = ""
+        buttonAnswer4.text = ""
+    }
+
+    private fun setClickListeners(clickable : Boolean) {
+        textViewQuestion.isClickable = clickable
+
+        buttonAnswer1.isClickable = clickable
+        buttonAnswer2.isClickable = clickable
+        buttonAnswer3.isClickable = clickable
+        buttonAnswer4.isClickable = clickable
+
+        buttonAnswer1.isEnabled = clickable
+        buttonAnswer2.isEnabled = clickable
+        buttonAnswer3.isEnabled = clickable
+        buttonAnswer4.isEnabled = clickable
     }
 
     private fun getButton(index: Int) : TextView {
@@ -137,6 +163,7 @@ class QuestionActivity : AppCompatActivity() {
             override fun onFinish() {
                 progressBar.progress = 0
                 submitAnswer(-1)
+                openNextQuestion()
             }
 
             override fun onTick(millisUntilFinished: Long) {
