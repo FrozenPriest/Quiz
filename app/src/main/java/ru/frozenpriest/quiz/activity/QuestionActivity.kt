@@ -24,6 +24,7 @@ class QuestionActivity : AppCompatActivity() {
     private var timerLength : Int = 0
     private var score = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,17 +33,16 @@ class QuestionActivity : AppCompatActivity() {
         val extras = intent.extras
         if(extras != null) {
             questions = extras.getParcelableArrayList<Question>("questions")?:throw NullPointerException("Question should not be null")
-
-            //todo shuffle answers
-
-
         }
 
+
+        //timer setup
         timerLength = resources.getInteger(R.integer.countdownTime)
         factor = 100.0 / timerLength
 
         openNextQuestion()
     }
+
 
     private fun setupQuestionText() {
         textViewQuestion.text = question.question
